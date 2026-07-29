@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: sto-app
+    working_dir: /var/www/html
+    env_file:
+      - .env
+    depends_on:
+      - mysql
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - sto-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: sto-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./:/var/www/html
+    depends_on:
+      - app
+    networks:
+      - sto-network
+
+  mysql:
+    image: mysql:8.4
+    container_name: sto-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: {{ env('DB_DATABASE') }}
+      MYSQL_ROOT_PASSWORD: {{ env('DB_PASSWORD') }}
+      MYSQL_USER: {{ env('DB_USERNAME') }}
+      MYSQL_PASSWORD: {{ env('DB_PASSWORD') }}
+    volumes:
+      - sto-mysql-data:/var/lib/mysql
+    networks:
+      - sto-network
+
+volumes:
+  sto-mysql-data:
+
+networks:
+  sto-network:
