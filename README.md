@@ -24,8 +24,8 @@ cd smart-table-ordering
 
 # Salin file konfigurasi environment
 cp .env.example .env
-
-2. Konfigurasi SSL (Cloudflare Origin Certificate)
+```
+### 2. Konfigurasi SSL (Cloudflare Origin Certificate)
 Agar aplikasi dapat diakses menggunakan HTTPS (Port 443), Anda wajib menambahkan sertifikat dari Cloudflare Origin Server.
 
 Buat direktori untuk menyimpan sertifikat:
